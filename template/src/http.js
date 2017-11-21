@@ -1,0 +1,47 @@
+import Vue from 'vue'
+import axios from 'axios'
+import config from './config'
+import Promise from 'es6-promise'
+
+// 添加promise支持
+Promise.polyfill()
+
+// enable mock
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing') {
+  require('./mock')
+}
+
+var http = axios.create({
+  baseURL: config.url.api,
+  timeout: 1000
+  // headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+})
+http.interceptors.request.use(function (request) {
+  return request
+}, function (error) {
+  // Do something with request error
+  return Promise.reject(error)
+})
+http.interceptors.response.use(function (response) {
+  const request = response.config
+  if (config.debug.http) {
+    console.log(
+      '>>>', request.method.toUpperCase(), request.url, request.params,
+      '\n   ', response.status, response.data
+    )
+  }
+  return response
+}, function (error) {
+  if (config.debug.http) {
+    let { response, config: request } = error
+    if (request) {
+      console.log(
+        '>>>', request.method.toUpperCase(), request.url, request.params,
+        '\n   ', response.status, response.data
+      )
+    }
+  }
+  // Do something with response error
+  return Promise.reject(error)
+})
+Vue.prototype.$http = http
