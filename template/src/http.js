@@ -1,10 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios'
 import config from '@/config'
-import Promise from 'es6-promise'
-
-// 添加promise支持
-Promise.polyfill()
 
 // enable mock
 if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing') {
