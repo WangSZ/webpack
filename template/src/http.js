@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios'
-import config from './config'
+import config from '@/config'
 import Promise from 'es6-promise'
 
 // 添加promise支持
